@@ -12,6 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { StatCards } from "@/components/layout/stat-cards";
 
 export default function Page() {
   const {
@@ -153,51 +154,32 @@ export default function Page() {
 
         {/* KPI Cards */}
         <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
-            <div className="px-5 pt-4 pb-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Total Routers</p>
-              <p className="mt-2 text-3xl font-semibold">{summary.totalRouters}</p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                HTTP · TCP · UDP routes
-              </p>
-            </div>
-          </div>
+          <StatCards stats={{
+            label: "Total Routers",
+            number: summary.totalRouters,
+            description: "HTTP · TCP · UDP routes"
+          }} />
 
-          <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
-            <div className="px-5 pt-4 pb-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Total Services</p>
-              <p className="mt-2 text-3xl font-semibold">{summary.totalServices}</p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                Backend services configured
-              </p>
-            </div>
-          </div>
+          <StatCards stats={{
+            label: "Total Services",
+            number: summary.totalServices,
+            description: "Backend services configured"
+          }} />
 
-          <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
-            <div className="px-5 pt-4 pb-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Middlewares</p>
-              <p className="mt-2 text-3xl font-semibold">{summary.totalMiddlewares}</p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                Active middleware chains
-              </p>
-            </div>
-          </div>
+          <StatCards stats={{
+            label: "Middlewares",
+            number: summary.totalMiddlewares,
+            description: "Active middleware chains"
+          }} />
 
-          <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
-            <div className="px-5 pt-4 pb-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Entrypoints</p>
-              <p className="mt-2 text-3xl font-semibold">{summary.totalEntrypoints}</p>
-              <p className="mt-1 text-[11px] text-slate-500">
-                Listening on ports
-              </p>
-            </div>
-          </div>
+          <StatCards stats={{
+            label: "Entrypoints",
+            number: summary.totalEntrypoints,
+            description: "Listening on ports"
+          }} />
         </section>
 
-        {/* Protocol Distribution */}
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-
-
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Health Status</p>

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import useTraefikStore from "@/lib/stores/traefik-store";
+import { StatCards } from "@/components/layout/stat-cards";
 
 export default function Page() {
     const { entrypoints, fetchAll } = useTraefikStore();
@@ -57,28 +58,26 @@ export default function Page() {
                 </section>
                 {/* Stats Bar */}
                 <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="rounded-xl bg-white dark:bg-inherit border px-4 py-3">
-                        <p className="text-xs">Total Entrypoints</p>
-                        <p className="text-2xl font-semibold mt-1">{sortedEntrypoints.length}</p>
-                    </div>
-                    <div className="rounded-xl bg-white dark:bg-inherit border px-4 py-3">
-                        <p className="text-xs">TCP Listeners</p>
-                        <p className="text-2xl font-semibold mt-1">
-                            {sortedEntrypoints.filter((e) => !e.address?.includes("/udp")).length}
-                        </p>
-                    </div>
-                    <div className="rounded-xl bg-white dark:bg-inherit border px-4 py-3">
-                        <p className="text-xs">UDP Listeners</p>
-                        <p className="text-2xl font-semibold mt-1">
-                            {sortedEntrypoints.filter((e) => e.address?.includes("/udp")).length}
-                        </p>
-                    </div>
-                    <div className="rounded-xl bg-white dark:bg-inherit border px-4 py-3">
-                        <p className="text-xs">HTTP Enabled</p>
-                        <p className="text-2xl font-semibold mt-1">
-                            {sortedEntrypoints.filter((e) => e.http).length}
-                        </p>
-                    </div>
+                    <StatCards stats={{
+                        label: "Total Entrypoints",
+                        number: sortedEntrypoints.length,
+                        description: "All configured listeners"
+                    }} />
+                    <StatCards stats={{
+                        label: "TCP Listeners",
+                        number: sortedEntrypoints.filter((e) => !e.address?.includes("/udp")).length,
+                        description: "Listeners using TCP protocol"
+                    }} />
+                    <StatCards stats={{
+                        label: "UDP Listeners",
+                        number: sortedEntrypoints.filter((e) => e.address?.includes("/udp")).length,
+                        description: "Listeners using UDP protocol"
+                    }} />
+                    <StatCards stats={{
+                        label: "HTTP Enabled",
+                        number: sortedEntrypoints.filter((e) => e.http).length,
+                        description: "Entrypoints with HTTP enabled"
+                    }} />
                 </section>
 
                 {/* Entrypoints Grid */}
