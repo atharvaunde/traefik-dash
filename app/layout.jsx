@@ -1,9 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/providers/theme-provider"
 import { AppBar } from "@/components/layout/app-bar";
 import { MobileBottomNav } from "@/components/layout/mobile-navigation";
+import { AppProvider } from "@/components/providers/app-provider";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -32,12 +33,14 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <AppBar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Toaster position="bottom-right" richColors />
-          <MobileBottomNav />
+          <AppProvider>
+            <AppBar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Toaster position="bottom-right" richColors />
+            <MobileBottomNav />
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>
