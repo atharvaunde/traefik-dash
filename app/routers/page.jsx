@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import useTraefikStore from "@/lib/stores/traefik-store";
 import { Button } from "@/components/ui/button";
+import { NoData } from "@/components/layout/no-data";
 
 export default function Page() {
     const { httpRouters, tcpRouters, udpRouters, fetchAll } = useTraefikStore();
@@ -117,9 +118,12 @@ export default function Page() {
                     </div>
                     <div className="divide-y">
                         {currentRouters.length === 0 && (
-                            <div className="px-5 py-8 text-center text-sm">
-                                No routers found
-                            </div>
+                            <NoData
+                                title="No Routers Found"
+                                description="No routers are currently configured. Routers define how requests are handled and routed."
+                                actionLabel="Refresh"
+                                onAction={fetchAll}
+                            />
                         )}
                         {currentRouters.map((router) => (
                             <div key={router.name} className="px-5 py-4 bg-white dark:bg-inherit shadow-none transition">

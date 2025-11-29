@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import useTraefikStore from "@/lib/stores/traefik-store";
 import { Button } from "@/components/ui/button";
 import { HeartIcon } from "lucide-react";
+import { NoData } from "@/components/layout/no-data";
 
 export default function Page() {
     const { httpServices, tcpServices, udpServices, fetchAll } = useTraefikStore();
@@ -68,9 +69,12 @@ export default function Page() {
                 {/* Services Grid */}
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {currentServices.length === 0 && (
-                        <div className="col-span-full rounded-2xl bg-white dark:bg-inherit border p-8 text-center text-sm ">
-                            No services found
-                        </div>
+                        <NoData
+                            title="No Services Found"
+                            description="No services are currently configured. Services define backend services and load balancers."
+                            actionLabel="Refresh"
+                            onAction={fetchAll}
+                        />
                     )}
                     {currentServices.map((service) => {
                         const serverStatus = getServerStatus(service);
@@ -167,20 +171,6 @@ export default function Page() {
                                                     })}
                                                 </div>
                                             )}
-
-                                            {/* Health Check */}
-                                            {/* {service.loadBalancer.healthCheck && (
-                                                <div className="mt-3 text-xs  bg-blue-50 dark:bg-blue-900/20 px-2 py-2 rounded">
-                                                    <p className="font-medium text-blue-700 dark:text-blue-300 mb-1">
-                                                        Health Check Enabled
-                                                    </p>
-                                                    <div className="space-y-0.5">
-                                                        <div>Path: {service.loadBalancer.healthCheck.path}</div>
-                                                        <div>Interval: {service.loadBalancer.healthCheck.interval}</div>
-                                                        <div>Timeout: {service.loadBalancer.healthCheck.timeout}</div>
-                                                    </div>
-                                                </div>
-                                            )} */}
                                         </div>
                                     )}
 

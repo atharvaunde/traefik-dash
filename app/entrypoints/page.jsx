@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import useTraefikStore from "@/lib/stores/traefik-store";
 import { StatCards } from "@/components/layout/stat-cards";
+import { NoData } from "@/components/layout/no-data";
 
 export default function Page() {
     const { entrypoints, fetchAll } = useTraefikStore();
@@ -83,9 +84,12 @@ export default function Page() {
                 {/* Entrypoints Grid */}
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {sortedEntrypoints.length === 0 && (
-                        <div className="col-span-full rounded-2xl bg-white dark:bg-inherit border p-8 text-center text-sm">
-                            No entrypoints found
-                        </div>
+                        <NoData
+                            title="No Entrypoints Found"
+                            description="No network listeners are currently configured. Entrypoints define how Traefik receives requests."
+                            actionLabel="Refresh"
+                            onAction={fetchAll}
+                        />
                     )}
                     {sortedEntrypoints.map((entrypoint) => {
                         const { port, protocol } = parseAddress(entrypoint.address);

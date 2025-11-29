@@ -5,6 +5,7 @@ import useTraefikStore from "@/lib/stores/traefik-store";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
+import { NoData } from "@/components/layout/no-data";
 
 export default function Page() {
     const { httpMiddlewares, tcpMiddlewares, fetchAll } = useTraefikStore();
@@ -145,9 +146,12 @@ export default function Page() {
                 <TooltipProvider>
                     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {currentMiddlewares.length === 0 && (
-                            <div className="col-span-full rounded-xl bg-white dark:bg-inherit border p-8 text-center text-sm">
-                                No middlewares found
-                            </div>
+                            <NoData
+                                title="No Middlewares Found"
+                                description="No middlewares are currently configured. Middlewares allow you to modify requests and responses."
+                                actionLabel="Refresh"
+                                onAction={fetchAll}
+                            />
                         )}
                         {currentMiddlewares.map((middleware) => {
                             const middlewareInfo = getMiddlewareInfo(middleware.type);
