@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ConnectionErrorDialog } from "@/components/dialogs/connection-error-dialog";
 import { UpdateAvailableDialog } from "@/components/dialogs/update-available-dialog";
 import useTraefikStore from "@/lib/stores/traefik-store";
-import { checkForUpdates } from "@/lib/utils/version-check";
+import { checkForUpdates } from "@/lib/helpers/version-check";
 
 export function AppProvider({ children }) {
     const { connectionError, version, clearConnectionError } = useTraefikStore();

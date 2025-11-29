@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { isConnectionError } from '@/lib/utils/error-utils';
+import { isConnectionError } from '@/lib/helpers/error-utils';
 
 const DEFAULT_TRAEFIK_URL = process.env.TRAEFIK_API_URL || 'http://localhost:8080';
 

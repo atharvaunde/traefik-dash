@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatTimeAgo } from "@/lib/utils/version-check";
+import { formatTimeAgo } from "@/lib/helpers/version-check";
 import { remark } from 'remark';
 import html from 'remark-html';
 
