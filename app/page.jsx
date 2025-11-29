@@ -143,7 +143,7 @@ export default function Page() {
             <h1 className="text-2xl font-semibold tracking-tight">
               Traefik Dashboard
             </h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm">
               Monitor routers, services, middlewares & entrypoints · {" "}
               <span className="font-medium">
                 {version?.Version || "Loading..."} ({version?.Codename || ""})
@@ -183,7 +183,7 @@ export default function Page() {
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Health Status</p>
-              <p className="text-xs text-slate-500">Router health distribution</p>
+              <p className="text-xs">Router health distribution</p>
             </div>
             <div className="px-5 py-5 space-y-4">
               <ChartContainer
@@ -215,7 +215,7 @@ export default function Page() {
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Active HTTP Routers</p>
-                <p className="text-xs text-slate-500">Recently configured routes</p>
+                <p className="text-xs">Recently configured routes</p>
               </div>
               <Link href="/routers">
                 <Button variant="outline" size="sm" className="text-xs">
@@ -226,15 +226,15 @@ export default function Page() {
             <div className="px-5 py-3">
               <ul className="divide-y divide-slate-100 dark:divide-slate-700 text-xs">
                 {recentRouters.length === 0 && (
-                  <p className="text-xs text-slate-500 py-2">No routers found.</p>
+                  <p className="text-xs py-2">No routers found.</p>
                 )}
                 {recentRouters.map((router) => (
                   <li key={router.name} className="py-2">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{router.name}</p>
-                        <p className="text-[11px] text-slate-500">{router.rule}</p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[11px]">{router.rule}</p>
+                        <p className="text-[11px]">
                           Service: {router.service} · Provider: {router.provider}
                         </p>
                       </div>
@@ -253,7 +253,7 @@ export default function Page() {
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Routers with Errors</p>
-              <p className="text-xs text-slate-500">Requires attention</p>
+              <p className="text-xs">Requires attention</p>
             </div>
             <div className="px-5 py-3">
               <ul className="divide-y divide-slate-100 dark:divide-slate-700 text-xs">
@@ -265,7 +265,7 @@ export default function Page() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{router.name}</p>
-                        <p className="text-[11px] text-slate-500">{router.rule}</p>
+                        <p className="text-[11px]">{router.rule}</p>
                         {router.error && (
                           <p className="mt-1 text-[11px] text-red-600">• {router.error.join(" · ")}</p>
                         )}

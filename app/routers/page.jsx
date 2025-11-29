@@ -50,7 +50,7 @@ export default function Page() {
                 </section>
 
                 {/* Filters */}
-                <section className="flex items-center gap-3">
+                <section className="flex flex-col md:flex-row md:items-center gap-3">
                     {/* Protocol buttons */}
                     <div className="flex gap-2">
                         <Button
@@ -76,7 +76,7 @@ export default function Page() {
                         </Button>
                     </div>
 
-                    <div className="h-6 w-px bg-border" />
+                    <div className="hidden md:block h-6 w-px bg-border" />
 
                     {/* Filter buttons */}
                     <div className="flex gap-2">
@@ -110,8 +110,6 @@ export default function Page() {
                         </Button>
                     </div>
                 </section>
-
-
 
                 {/* Routers List */}
                 <section className="rounded-xl bg-white dark:bg-inherit border">

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isConnectionError } from '@/lib/utils/error-utils';
 
 const DEFAULT_TRAEFIK_URL = process.env.TRAEFIK_API_URL || 'http://localhost:8080';
 
@@ -24,9 +25,15 @@ export async function GET(request) {
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
+        const isNetworkError = isConnectionError(error);
+
         return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
+            {
+                error: error.message,
+                connectionError: isNetworkError,
+                code: error.code || error.cause?.code
+            },
+            { status: isNetworkError ? 503 : 500 }
         );
     }
 }
