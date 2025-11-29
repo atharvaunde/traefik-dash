@@ -78,7 +78,7 @@ export default function Page() {
 
     if (summary.enabledRouters > 0) {
       data.push({
-        status: "Enabled",
+        status: "Healthy",
         count: summary.enabledRouters,
         fill: "hsl(142, 76%, 36%)",
       });
@@ -86,7 +86,7 @@ export default function Page() {
 
     if (summary.errorRouters > 0) {
       data.push({
-        status: "Errors",
+        status: "Unhealthy",
         count: summary.errorRouters,
         fill: "hsl(0, 84%, 60%)",
       });
@@ -116,12 +116,12 @@ export default function Page() {
     count: {
       label: "Routers",
     },
-    Enabled: {
-      label: "Enabled",
+    Healthy: {
+      label: "Healthy",
       color: "hsl(142, 76%, 36%)",
     },
-    Errors: {
-      label: "Errors",
+    Unhealthy: {
+      label: "Unhealthy",
       color: "hsl(0, 84%, 60%)",
     },
     Warnings: {
