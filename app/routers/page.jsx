@@ -50,8 +50,9 @@ export default function Page() {
                 </section>
 
                 {/* Filters */}
-                <section className="flex flex-wrap gap-2">
-                    <div className="flex gap-2 border-r pr-4">
+                <section className="flex items-center gap-3">
+                    {/* Protocol buttons */}
+                    <div className="flex gap-2">
                         <Button
                             variant={protocol === "http" ? "default" : "outline"}
                             size="sm"
@@ -74,6 +75,10 @@ export default function Page() {
                             UDP ({udpRouters.length})
                         </Button>
                     </div>
+
+                    <div className="h-6 w-px bg-border" />
+
+                    {/* Filter buttons */}
                     <div className="flex gap-2">
                         <Button
                             variant={filter === "all" ? "default" : "outline"}
@@ -105,6 +110,8 @@ export default function Page() {
                         </Button>
                     </div>
                 </section>
+
+
 
                 {/* Routers List */}
                 <section className="rounded-xl bg-white dark:bg-inherit border">
