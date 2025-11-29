@@ -42,7 +42,7 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen -m-4 bg-[#f5f5f7] dark:bg-inherit w-full">
+        <div className="min-h-screen  bg-[#f5f5f7] dark:bg-inherit w-full">
             <div className="mx-auto max-w-7xl px-6 py-8 space-y-6 w-full">
                 {/* Header */}
                 <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">

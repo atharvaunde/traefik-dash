@@ -37,7 +37,7 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen -m-4 bg-[#f5f5f7] dark:bg-[#0d0d0f] w-full">
+        <div className="min-h-screen  bg-[#f5f5f7] dark:bg-[#0d0d0f] w-full">
             <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
                 {/* Header */}
                 <section className="flex items-center justify-between gap-3">
