@@ -1,0 +1,78 @@
+name: Development Push Check
+
+on:
+  push:
+    branches:
+      - development
+      - develop
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate Development Changes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run linter
+        run: yarn lint
+        continue-on-error: true
+
+      - name: Build application
+        run: yarn build
+
+      - name: Check if PR to main exists
+        id: check_pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${context.ref.replace('refs/heads/', '')}`,
+              base: 'main'
+            });
+            
+            if (pulls.length === 0) {
+              core.info('No PR to main exists yet');
+              core.setOutput('pr_exists', 'false');
+            } else {
+              core.info(`Found PR #${pulls[0].number}`);
+              core.setOutput('pr_exists', 'true');
+              core.setOutput('pr_number', pulls[0].number);
+            }
+
+      - name: Create reminder comment
+        if: steps.check_pr.outputs.pr_exists == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const message = `## 🚀 Development Branch Updated
+            
+            Changes have been pushed to the development branch.
+            
+            **Next Steps:**
+            1. Create a Pull Request to merge into \`main\`
+            2. GitHub Copilot will automatically review your PR
+            3. The build check must pass
+            4. Copilot review is **required** before merging
+            
+            [Create Pull Request](https://github.com/${context.repo.owner}/${context.repo.repo}/compare/main...${context.ref.replace('refs/heads/', '')})`;
+            
+            console.log('Development branch updated. Ready to create PR to main.');
