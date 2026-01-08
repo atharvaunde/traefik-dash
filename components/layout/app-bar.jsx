@@ -2,8 +2,9 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { BarChart3, Route, Server, Shield, Plug2, Settings, Cat } from "lucide-react"
+import { BarChart3, Route, Server, Shield, Plug2, Settings } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
+import Image from "next/image"
 
 export function AppBar() {
     const pathname = usePathname()
@@ -19,7 +20,7 @@ export function AppBar() {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="h-16 flex items-center justify-between px-4 container mx-auto">
                 <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
-                    <Cat className="h-6 w-6" />
+                    <Image src="/logo.png" alt="Logo" width={30} height={30} />
                     <span>Traefik.io</span>
                 </Link>
 
