@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import useTraefikStore from "@/lib/stores/traefik-store";
 import { StatCards } from "@/components/layout/stat-cards";
 import { NoData } from "@/components/layout/no-data";
+import { PageRefresh } from "@/components/layout/page-refresh";
 
 export default function Page() {
     const { entrypoints, fetchAll } = useTraefikStore();
@@ -13,8 +14,8 @@ export default function Page() {
     }, [fetchAll]);
 
     const sortedEntrypoints = useMemo(() => {
-        return Object.entries(entrypoints || {})
-            .map(([name, config]) => ({ name, ...config }))
+        return (entrypoints || [])
+            .slice()
             .sort((a, b) => {
                 const portA = parseInt(a.address?.split(":").pop()) || 0;
                 const portB = parseInt(b.address?.split(":").pop()) || 0;
@@ -44,9 +45,8 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen  bg-[#f5f5f7] dark:bg-[#0d0d0f] w-full">
-            <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-                {/* Header */}
+        <div className="bg-background w-full">
+            <div className="mx-auto max-w-7xl px-6 py-8 space-y-6 pb-20 md:pb-8">
                 <section className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                         <h1 className="text-2xl font-semibold tracking-tight">
@@ -56,6 +56,7 @@ export default function Page() {
                             Network listeners and connection configuration
                         </p>
                     </div>
+                    <PageRefresh />
                 </section>
                 {/* Stats Bar */}
                 <section className="grid grid-cols-2 md:grid-cols-4 gap-4">

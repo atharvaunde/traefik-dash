@@ -1,16 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ConnectionErrorDialog } from "@/components/dialogs/connection-error-dialog";
 import { UpdateAvailableDialog } from "@/components/dialogs/update-available-dialog";
 import useTraefikStore from "@/lib/stores/traefik-store";
 import { checkForUpdates } from "@/lib/helpers/version-check";
 
 export function AppProvider({ children }) {
-    const { connectionError, version, clearConnectionError } = useTraefikStore();
+    const { connectionError, version, clearConnectionError, autoRefreshInterval, fetchAll } = useTraefikStore();
     const [showConnectionError, setShowConnectionError] = useState(false);
     const [showUpdateDialog, setShowUpdateDialog] = useState(false);
     const [versionData, setVersionData] = useState(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         if (connectionError) {
@@ -25,15 +26,12 @@ export function AppProvider({ children }) {
         }
     };
 
-    // Check for updates on mount and when version changes
     useEffect(() => {
         async function performVersionCheck() {
             if (!version?.Version) return;
 
             try {
-                const currentVersion = version.Version;
-                const updateInfo = await checkForUpdates(currentVersion);
-
+                const updateInfo = await checkForUpdates(version.Version);
                 if (updateInfo?.updateAvailable) {
                     setVersionData(updateInfo);
                     setShowUpdateDialog(true);
@@ -47,6 +45,25 @@ export function AppProvider({ children }) {
             performVersionCheck();
         }
     }, [version]);
+
+    useEffect(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+
+        if (autoRefreshInterval > 0) {
+            intervalRef.current = setInterval(() => {
+                fetchAll(true);
+            }, autoRefreshInterval);
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [autoRefreshInterval, fetchAll]);
 
     return (
         <>

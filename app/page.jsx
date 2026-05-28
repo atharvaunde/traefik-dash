@@ -13,6 +13,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { StatCards } from "@/components/layout/stat-cards";
+import { StatusBadge } from "@/components/layout/status-badge";
+import { SkeletonStatCards } from "@/components/layout/skeleton-card";
+import { PageRefresh } from "@/components/layout/page-refresh";
 
 export default function Page() {
   const {
@@ -22,6 +25,7 @@ export default function Page() {
     overview,
     version,
     fetchAll,
+    loading,
   } = useTraefikStore();
 
   useEffect(() => {
@@ -67,141 +71,88 @@ export default function Page() {
     return httpRouters.filter(r => r.error && r.error.length > 0).slice(0, 5);
   }, [httpRouters]);
 
-  const getStatusColor = (status) => {
-    return status === "enabled"
-      ? "border-[#196127]/30 bg-[#196127]/10 text-[#196127]"
-      : "border-red-500/30 bg-red-500/10 text-red-600";
-  };
-
   const chartData = useMemo(() => {
     const data = [];
 
     if (summary.enabledRouters > 0) {
-      data.push({
-        status: "Healthy",
-        count: summary.enabledRouters,
-        fill: "hsl(142, 76%, 36%)",
-      });
+      data.push({ status: "Healthy", count: summary.enabledRouters, fill: "hsl(142, 76%, 36%)" });
     }
-
     if (summary.errorRouters > 0) {
-      data.push({
-        status: "Unhealthy",
-        count: summary.errorRouters,
-        fill: "hsl(0, 84%, 60%)",
-      });
+      data.push({ status: "Unhealthy", count: summary.errorRouters, fill: "hsl(0, 84%, 60%)" });
     }
-
     if (summary.warningRouters > 0) {
-      data.push({
-        status: "Warnings",
-        count: summary.warningRouters,
-        fill: "hsl(38, 92%, 50%)",
-      });
+      data.push({ status: "Warnings", count: summary.warningRouters, fill: "hsl(38, 92%, 50%)" });
     }
 
     const disabledRouters = summary.totalRouters - summary.enabledRouters - summary.errorRouters - summary.warningRouters;
     if (disabledRouters > 0) {
-      data.push({
-        status: "Disabled",
-        count: disabledRouters,
-        fill: "hsl(215, 16%, 47%)",
-      });
+      data.push({ status: "Disabled", count: disabledRouters, fill: "hsl(215, 16%, 47%)" });
+    }
+
+    if (data.length === 0) {
+      data.push({ status: "No Data", count: 1, fill: "hsl(215, 16%, 80%)" });
     }
 
     return data;
   }, [summary]);
 
   const chartConfig = {
-    count: {
-      label: "Routers",
-    },
-    Healthy: {
-      label: "Healthy",
-      color: "hsl(142, 76%, 36%)",
-    },
-    Unhealthy: {
-      label: "Unhealthy",
-      color: "hsl(0, 84%, 60%)",
-    },
-    Warnings: {
-      label: "Warnings",
-      color: "hsl(38, 92%, 50%)",
-    },
-    Disabled: {
-      label: "Disabled",
-      color: "hsl(215, 16%, 47%)",
-    },
-  }
+    count: { label: "Routers" },
+    Healthy: { label: "Healthy", color: "hsl(142, 76%, 36%)" },
+    Unhealthy: { label: "Unhealthy", color: "hsl(0, 84%, 60%)" },
+    Warnings: { label: "Warnings", color: "hsl(38, 92%, 50%)" },
+    Disabled: { label: "Disabled", color: "hsl(215, 16%, 47%)" },
+    "No Data": { label: "No Data", color: "hsl(215, 16%, 80%)" },
+  };
+
+  const isOverviewLoading = loading.overview;
 
   return (
-    <div className="min-h-screen  bg-[#f5f5f7] dark:bg-[#0d0d0f] w-full">
-      <div className="mx-auto max-w-7xl px-6 py-8 space-y-6">
-        {/* Header */}
+    <div className="bg-background w-full">
+      <div className="mx-auto max-w-7xl px-6 py-8 space-y-6 pb-20 md:pb-8">
         <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">
               Traefik Dashboard
             </h1>
-            <p className="text-sm">
-              Monitor routers, services, middlewares & entrypoints · {" "}
-              <span className="font-medium">
-                {version?.Version || "Loading..."} ({version?.Codename || ""})
-              </span>
+            <p className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+              Monitor routers, services, middlewares & entrypoints
+              {loading.version ? (
+                <span className="inline-block h-4 w-32 bg-muted rounded animate-pulse" />
+              ) : version?.Version ? (
+                <span className="font-mono bg-muted rounded px-2 py-0.5 text-xs">
+                  v{version.Version} · {version.Codename}
+                </span>
+              ) : null}
             </p>
           </div>
+          <PageRefresh />
         </section>
 
-        {/* KPI Cards */}
         <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <StatCards stats={{
-            label: "Total Routers",
-            number: summary.totalRouters,
-            description: "HTTP · TCP · UDP routes"
-          }} />
-
-          <StatCards stats={{
-            label: "Total Services",
-            number: summary.totalServices,
-            description: "Backend services configured"
-          }} />
-
-          <StatCards stats={{
-            label: "Middlewares",
-            number: summary.totalMiddlewares,
-            description: "Active middleware chains"
-          }} />
-
-          <StatCards stats={{
-            label: "Entrypoints",
-            number: summary.totalEntrypoints,
-            description: "Listening on ports"
-          }} />
+          {isOverviewLoading ? (
+            <SkeletonStatCards count={4} />
+          ) : (
+            <>
+              <StatCards stats={{ label: "Total Routers", number: summary.totalRouters, description: "HTTP · TCP · UDP routes" }} />
+              <StatCards stats={{ label: "Total Services", number: summary.totalServices, description: "Backend services configured" }} />
+              <StatCards stats={{ label: "Middlewares", number: summary.totalMiddlewares, description: "Active middleware chains" }} />
+              <StatCards stats={{ label: "Entrypoints", number: summary.totalEntrypoints, description: "Listening on ports" }} />
+            </>
+          )}
         </section>
 
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
-              <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Health Status</p>
-              <p className="text-xs">Router health distribution</p>
+              <p className="text-sm font-medium">Health Status</p>
+              <p className="text-xs text-muted-foreground">Router health distribution</p>
             </div>
             <div className="px-5 py-5 space-y-4">
-              <ChartContainer
-                config={chartConfig}
-                className="mx-auto aspect-square max-h-[250px]"
-              >
+              <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
                 <PieChart>
-                  <ChartTooltip
-                    cursor={true}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <Pie
-                    data={chartData}
-                    dataKey="count"
-                    nameKey="status"
-                    innerRadius={60}
-
-                  />
+                  <ChartTooltip cursor={true} content={<ChartTooltipContent hideLabel />} />
+                  <Pie data={chartData} dataKey="count" nameKey="status" innerRadius={60} />
                   <ChartLegend
                     content={<ChartLegendContent nameKey="status" />}
                     className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
@@ -214,35 +165,29 @@ export default function Page() {
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Active HTTP Routers</p>
-                <p className="text-xs">Recently configured routes</p>
+                <p className="text-sm font-medium">HTTP Routers</p>
+                <p className="text-xs text-muted-foreground">Active routes</p>
               </div>
               <Link href="/routers">
-                <Button variant="outline" size="sm" className="text-xs">
-                  View all
-                </Button>
+                <Button variant="outline" size="sm" className="text-xs">View all</Button>
               </Link>
             </div>
             <div className="px-5 py-3">
               <ul className="divide-y divide-slate-100 dark:divide-slate-700 text-xs">
                 {recentRouters.length === 0 && (
-                  <p className="text-xs py-2">No routers found.</p>
+                  <p className="text-xs py-2 text-muted-foreground">No routers found.</p>
                 )}
                 {recentRouters.map((router) => (
                   <li key={router.name} className="py-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{router.name}</p>
-                        <p className="text-[11px]">{router.rule}</p>
-                        <p className="text-[11px]">
+                        <p className="text-sm font-medium">{router.name}</p>
+                        <p className="text-xs text-muted-foreground">{router.rule}</p>
+                        <p className="text-xs text-muted-foreground">
                           Service: {router.service} · Provider: {router.provider}
                         </p>
                       </div>
-                      <span
-                        className={`inline-flex capitalize items-center rounded-full border px-2 py-0.5 text-[11px] ${getStatusColor(router.status)}`}
-                      >
-                        {router.status}
-                      </span>
+                      <StatusBadge status={router.status} />
                     </div>
                   </li>
                 ))}
@@ -252,8 +197,8 @@ export default function Page() {
 
           <div className="rounded-2xl border bg-white dark:bg-inherit shadow-none">
             <div className="px-5 pt-4 pb-3 border-b border-slate-100 dark:border-slate-700">
-              <p className="text-sm font-medium text-slate-900 dark:text-slate-100">Routers with Errors</p>
-              <p className="text-xs">Requires attention</p>
+              <p className="text-sm font-medium">Routers with Errors</p>
+              <p className="text-xs text-muted-foreground">Requires attention</p>
             </div>
             <div className="px-5 py-3">
               <ul className="divide-y divide-slate-100 dark:divide-slate-700 text-xs">
@@ -264,15 +209,13 @@ export default function Page() {
                   <li key={router.name} className="py-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{router.name}</p>
-                        <p className="text-[11px]">{router.rule}</p>
+                        <p className="text-sm font-medium">{router.name}</p>
+                        <p className="text-xs text-muted-foreground">{router.rule}</p>
                         {router.error && (
-                          <p className="mt-1 text-[11px] text-red-600">• {router.error.join(" · ")}</p>
+                          <p className="mt-1 text-xs text-red-600">• {router.error.join(" · ")}</p>
                         )}
                       </div>
-                      <span className="inline-flex capitalize items-center rounded-full border border-red-500/30 bg-red-500/10 text-red-600 px-2 py-0.5 text-[11px]">
-                        {router.status}
-                      </span>
+                      <StatusBadge status={router.status} />
                     </div>
                   </li>
                 ))}
@@ -280,6 +223,7 @@ export default function Page() {
             </div>
           </div>
         </section>
+
       </div>
     </div>
   );

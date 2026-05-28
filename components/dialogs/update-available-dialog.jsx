@@ -47,8 +47,6 @@ export function UpdateAvailableDialog({ open, onOpenChange, versionData }) {
 
     const { currentVersion, latestVersion, releaseUrl, releaseNotes, publishedAt, releaseName } = versionData;
 
-
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogOverlay />
@@ -70,9 +68,6 @@ export function UpdateAvailableDialog({ open, onOpenChange, versionData }) {
                         <div className="bg-muted/50 rounded-lg p-3">
                             <div className="text-xs text-muted-foreground mb-1">Current Version</div>
                             <div className="font-mono font-semibold text-sm">{currentVersion}</div>
-
-
-
                         </div>
                         <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                             <div className="text-xs text-muted-foreground mb-1">Latest Version</div>

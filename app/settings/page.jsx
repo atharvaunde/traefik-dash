@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
 export default function Page() {
-    const { traefikEndpoint, setTraefikEndpoint } = useTraefikStore();
+    const { traefikEndpoint, setTraefikEndpoint, autoRefreshInterval, setAutoRefreshInterval } = useTraefikStore();
     const [endpoint, setEndpoint] = useState("");
     const [saved, setSaved] = useState(false);
     const [isHydrated, setIsHydrated] = useState(false);
@@ -42,8 +42,8 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen  bg-[#f5f5f7] dark:bg-inherit w-full">
-            <div className="mx-auto max-w-7xl px-6 py-8 space-y-6 w-full">
+        <div className="bg-background w-full">
+            <div className="mx-auto max-w-7xl px-6 py-8 space-y-6 w-full pb-20 md:pb-8">
                 {/* Header */}
                 <section className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                     <div>
@@ -95,6 +95,34 @@ export default function Page() {
                             <Button onClick={handleReset} variant="outline" size="sm">
                                 Reset to Default
                             </Button>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="rounded-2xl bg-white dark:bg-inherit border overflow-hidden">
+                    <div className="px-6 py-4 border-b">
+                        <h2 className="text-lg font-medium">Auto-Refresh</h2>
+                        <p className="text-sm mt-1 text-muted-foreground">
+                            Automatically refresh data at a set interval
+                        </p>
+                    </div>
+                    <div className="px-6 py-6">
+                        <div className="flex gap-2 flex-wrap">
+                            {[
+                                { label: "Off", value: 0 },
+                                { label: "30s", value: 30_000 },
+                                { label: "1 min", value: 60_000 },
+                                { label: "5 min", value: 300_000 },
+                            ].map((opt) => (
+                                <Button
+                                    key={opt.value}
+                                    size="sm"
+                                    variant={autoRefreshInterval === opt.value ? "default" : "outline"}
+                                    onClick={() => setAutoRefreshInterval(opt.value)}
+                                >
+                                    {opt.label}
+                                </Button>
+                            ))}
                         </div>
                     </div>
                 </section>

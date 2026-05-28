@@ -9,7 +9,7 @@ import {
 
 export default function NotFound() {
     return (
-        <div className="relative flex flex-col items-center justify-center text-center px-6 overflow-hidden" style={{ height: 'calc(100vh - 64px)' }}>
+        <div className="relative flex flex-col items-center justify-center text-center px-6 overflow-hidden min-h-[calc(100vh-4rem)]">
             <div className="absolute inset-0 opacity-10">
                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
